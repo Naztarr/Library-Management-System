@@ -16,7 +16,7 @@ We are committed to continuously enhancing the application based on user feedbac
 
 
 # ***FEATURES***
-The main features of LibManager include:
+The main features of LibManager include -
 
 :::Security: The application prioritizes security and utilizes Spring Security for authentication and authorization.
 :::User Authentication: Users can securely sign up for new accounts and log in.
