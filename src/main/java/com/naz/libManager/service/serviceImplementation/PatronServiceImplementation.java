@@ -12,6 +12,10 @@ import com.naz.libManager.repository.UserRepository;
 import com.naz.libManager.service.PatronService;
 import com.naz.libManager.util.UserUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +35,7 @@ import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZ
  */
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "patron")
 public class PatronServiceImplementation implements PatronService {
     private final UserRepository userRepository;
 
@@ -44,6 +49,7 @@ public class PatronServiceImplementation implements PatronService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable
     public ResponseEntity<ApiResponse<List<UserData>>> getAllPatrons(Integer page, Integer size) {
         page = page != null && page >= 0 ? page : 0;
         size = size != null && size > 0 ? size : DEFAULT_PAGE_SIZE;
@@ -68,6 +74,7 @@ public class PatronServiceImplementation implements PatronService {
      */
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(key = "#patronId")
     public ResponseEntity<ApiResponse<PatronDetail>> viewPatronDetail(UUID patronId) {
         User user = userRepository.findByEmailAddress(UserUtil.getLoginUser())
                 .orElseThrow(() -> new LibManagerException("User not found"));
@@ -92,6 +99,7 @@ public class PatronServiceImplementation implements PatronService {
      */
     @Override
     @Transactional
+    @CachePut(key = "#patronId")
     public ResponseEntity<ApiResponse<String>> updatePatronDetail(UUID patronId, UserRequest userRequest) {
         User user = userRepository.findByEmailAddress(UserUtil.getLoginUser())
                 .orElseThrow(() -> new LibManagerException("User not found"));
@@ -114,6 +122,7 @@ public class PatronServiceImplementation implements PatronService {
      */
     @Override
     @Transactional
+    @CacheEvict(key = "#patronId")
     public ResponseEntity<ApiResponse<String>> removePatron(UUID patronId) {
         User user = userRepository.findByEmailAddress(UserUtil.getLoginUser())
                 .orElseThrow(() -> new LibManagerException("User not found"));
