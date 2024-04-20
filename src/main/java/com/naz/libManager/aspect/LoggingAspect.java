@@ -1,4 +1,4 @@
-package com.naz.libManager.config;
+package com.naz.libManager.aspect;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
