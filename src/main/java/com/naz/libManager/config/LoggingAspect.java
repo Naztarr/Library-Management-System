@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Aspect for logging method executions and performance monitoring*/
 @Aspect
 @Component
 public class LoggingAspect {
@@ -48,7 +49,7 @@ public class LoggingAspect {
 
         } catch(Throwable throwable){
             long endTime = System.currentTimeMillis();
-            long executionTime = endTime -startTime;
+            long executionTime = endTime - startTime;
             logger.error("Method {} threw an exception after {} ms: {}", joinPoint.getSignature(), executionTime, throwable.getMessage());
             throw throwable;
         }
