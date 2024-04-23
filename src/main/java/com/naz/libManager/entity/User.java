@@ -33,6 +33,9 @@ public class User extends BaseEntity implements UserDetails {
 
     private Role role;
 
+    @Column(name = "is_enabled")
+    private Boolean isEnabled = false;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
@@ -65,6 +68,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 }

@@ -19,7 +19,8 @@ public class LoggingAspect {
             "execution(* com.naz.libManager.service.serviceImplementation.BookServiceImplementation.updateBookDetail(..)) || " +
             "execution(* com.naz.libManager.service.serviceImplementation.BookServiceImplementation.removeBook(..)) || " +
             "execution(* com.naz.libManager.service.serviceImplementation.BorrowingServiceImplementation.borrowBook(..)) || " +
-            "execution(* com.naz.libManager.service.serviceImplementation.BorrowingServiceImplementation.returnBook(..))"
+            "execution(* com.naz.libManager.service.serviceImplementation.BorrowingServiceImplementation.returnBook(..))" +
+            "execution(* com.naz.libmanager.service.serviceImplementation.EmailImplementation.sendMail(..))"
     )
     private void publicMethodsFromLoggingPackage(){};
 

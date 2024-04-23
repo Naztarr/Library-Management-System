@@ -9,5 +9,6 @@ import org.springframework.http.ResponseEntity;
 public interface AuthenticationService {
 
     ResponseEntity<ApiResponse<String>> signup(SignupDto signupDto);
+    ResponseEntity<ApiResponse<String>> confirmEmail(String token);
     ResponseEntity<ApiResponse<LoginResponse>> login(LoginDto loginDto);
 }

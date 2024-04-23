@@ -36,4 +36,11 @@ public class AuthController {
     ResponseEntity<ApiResponse<LoginResponse>> loginUser(@RequestBody LoginDto loginDto){
         return ResponseEntity.ok(authenticationService.login(loginDto).getBody());
     }
+
+    @GetMapping("/email-confirmation")
+    @Operation(summary = "confirm email",
+            description = "Verifies the user's email with token sent to the email")
+    ResponseEntity<ApiResponse<String>> confirmEmailAddress(@PathVariable String token){
+        return authenticationService.confirmEmail(token);
+    }
 }
