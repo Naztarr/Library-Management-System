@@ -8,6 +8,7 @@ import com.naz.libManager.payload.ApiResponse;
 import com.naz.libManager.payload.LoginResponse;
 import com.naz.libManager.repository.UserRepository;
 import com.naz.libManager.service.AuthenticationService;
+import com.naz.libManager.util.SignupEmailTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,9 @@ public class AuthImplementation implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtImplementation jwtImplementation;
+    private final EmailImplementation emailImplementation;
 
+    private final Long expire = 900000L;
     protected String generateToken(User user, Long expiryDate) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("first_name", user.getFirstName());
@@ -43,7 +46,7 @@ public class AuthImplementation implements AuthenticationService {
      * Registers a new user.
      *
      * @param signupDto The DTO containing user signup information.
-     * @return ResponseEntity containing ApiResponse with a message indicating successful signup or error message if the signup failed.
+     * @return ResponseEntity containing ApiResponse with a message indicating successful signup, requesting for email verification or error message if the signup failed.
      * @throws LibManagerException if the provided email address already exists or if the passwords do not match.
      */
     @Override
@@ -61,10 +64,43 @@ public class AuthImplementation implements AuthenticationService {
             user.setPassword(passwordEncoder.encode(signupDto.password()));
             user.setRole(signupDto.role());
             userRepository.save(user);
+
+            emailImplementation.sendMail(SignupEmailTemplate.signup(signupDto.firstName(),
+                    generateToken(user, expire)),
+                    "Verify your email address",
+                    signupDto.emailAddress());
         } else{
             throw new LibManagerException("Provided passwords do not match");
         }
-        return ResponseEntity.ok(new ApiResponse<>(String.format("Welcome! '%s'. You have successfully signed up", signupDto.firstName()), HttpStatus.OK));
+        return ResponseEntity.ok(new ApiResponse<>("Check your email for verification link",
+                String.format("Welcome! '%s'. You have successfully signed up", signupDto.firstName()),
+                HttpStatus.OK));
+    }
+
+    /**
+     * @param token The token for verifying the email
+     * @return ResponseEntity containing APiResponse with message indicating success or error accordingly
+     */
+    @Override
+    public ResponseEntity<ApiResponse<String>> confirmEmail(String token) {
+        String email = jwtImplementation.extractEmailAddressFromToken(token);
+        if(email != null){
+            if(jwtImplementation.isExpired(token)){
+                throw new LibManagerException("Link has expired. Please request for a new link");
+            } else{
+                User user = userRepository.findByEmailAddress(email).orElseThrow(()
+                        -> new LibManagerException("User not found"));
+                if(!user.isEnabled()){
+                    user.setIsEnabled(true);
+                    userRepository.save(user);
+                    return ResponseEntity.ok(new ApiResponse<>("Your email address is verified. You can now login", HttpStatus.OK));
+                } else{
+                    throw new LibManagerException("Your email address is already verified");
+                }
+            }
+        } else{
+            throw new LibManagerException("Link is not properly formatted");
+        }
     }
 
     /**
