@@ -1,8 +1,8 @@
 package com.naz.libManager.util;
 
-public class SignupEmailTemplate {
-    public static String signup(String firstName, String token){
-        String link = "http://localhost:8050/auth/email-confirmation/"+token;
+public class ForgotPasswordTemplate {
+    public static String resetPassword(String firstName, String token){
+        String link = "http://localhost:8050/auth/password-reset/"+token;
         return "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
                 "<html xmlns=\"http://www.w3.org/1999/xhtml\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\">\n" +
                 "<head>\n" +
@@ -168,7 +168,7 @@ public class SignupEmailTemplate {
                 "  <tr>\n" +
                 "    <td style=\"padding-right: 0px;padding-left: 0px;\" align=\"center\">\n" +
                 "      \n" +
-//                "      <img align=\"center\" border=\"0\" src=\"https://rtbcwfkvbvustzbmbtie.supabase.co/storage/v1/object/public/Monieflex/image-1.png\" alt=\"Hero Image\" title=\"Hero Image\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 24%;max-width: 139.2px;\" width=\"139.2\" class=\"v-src-width v-src-max-width\"/>\n" +
+                "      <img align=\"center\" border=\"0\" src=\"https://rtbcwfkvbvustzbmbtie.supabase.co/storage/v1/object/public/Monieflex/image-1.png\" alt=\"Hero Image\" title=\"Hero Image\" style=\"outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 24%;max-width: 139.2px;\" width=\"139.2\" class=\"v-src-width v-src-max-width\"/>\n" +
                 "      \n" +
                 "    </td>\n" +
                 "  </tr>\n" +
@@ -185,7 +185,7 @@ public class SignupEmailTemplate {
                 "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:0px 10px 30px;font-family:'Montserrat',sans-serif;\" align=\"left\">\n" +
                 "        \n" +
                 "  <!--[if mso]><table width=\"100%\"><tr><td><![endif]-->\n" +
-                "    <h2 class=\"v-line-height v-font-size\" style=\"margin: 0px; color: #27187e; line-height: 140%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 20px; font-weight: 400;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><strong>Welcome to LibManager, " + firstName + " </strong></span></span></span></span></span></h2>\n" +
+                "    <h2 class=\"v-line-height v-font-size\" style=\"margin: 0px; color: #27187e; line-height: 140%; text-align: center; word-wrap: break-word; font-family: 'Montserrat',sans-serif; font-size: 20px; font-weight: 400;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><span style=\"line-height: 21.6px;\"><strong>Hello " + firstName + ", </strong></span></span></span></span></span></h2>\n" +
                 "  <!--[if mso]></td></tr></table><![endif]-->\n" +
                 "\n" +
                 "      </td>\n" +
@@ -222,8 +222,8 @@ public class SignupEmailTemplate {
                 "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:1px 30px 20px 40px;font-family:'Montserrat',sans-serif;\" align=\"left\">\n" +
                 "        \n" +
                 "  <div class=\"v-line-height v-font-size\" style=\"font-size: 14px; color: #000000; line-height: 190%; text-align: left; word-wrap: break-word;\">\n" +
-                "    <p style=\"font-size: 14px; line-height: 190%;\"><span style=\"font-size: 14px; line-height: 26.6px; font-family: Arvo;\"><span style=\"line-height: 26.6px;\">From Team MindConnect</span><span style=\"line-height: 26.6px;\"></span><span style=\"line-height: 26.6px;\">,</span></span></p>\n" +
-                "<p style=\"font-size: 14px; line-height: 190%;\"><span style=\"font-size: 14px; line-height: 26.6px;\">We are thrilled to have you on MindConnect. However, before we seal the deal, we would love if you click the button below to verify your email address. Note that l</span><span style=\"font-size: 14px; line-height: 26.6px;\">ink expires in 15 minutes.</span></p>\n" +
+                "    <p style=\"font-size: 14px; line-height: 190%;\"><span style=\"font-size: 14px; line-height: 26.6px; font-family: Arvo;\"><span style=\"line-height: 26.6px;\">From Team MonieFlex</span><span style=\"line-height: 26.6px;\"></span><span style=\"line-height: 26.6px;\">,</span></span></p>\n" +
+                "<p style=\"font-size: 14px; line-height: 190%;\"><span style=\"font-size: 14px; line-height: 26.6px;\">We understand that you might have forgotten your password. However, before we open the portal, we would love if you click the button below to verify your email address. Note that l</span><span style=\"font-size: 14px; line-height: 26.6px;\">ink expires in 15 minutes.</span></p>\n" +
                 "  </div>\n" +
                 "\n" +
                 "      </td>\n" +
@@ -263,7 +263,7 @@ public class SignupEmailTemplate {
                 "<div align=\"center\">\n" +
                 "  <!--[if mso]><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"" + link + "\" style=\"height:49px; v-text-anchor:middle; width:200px;\" arcsize=\"41%\"  stroke=\"f\" fillcolor=\"#3800ff\"><w:anchorlock/><center style=\"color:#FFFFFF;\"><![endif]-->\n" +
                 "    <a href=\"" + link + "\" target=\"_blank\" class=\"v-button v-font-size\" style=\"box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #3800ff; border-radius: 20px;-webkit-border-radius: 20px; -moz-border-radius: 20px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;\">\n" +
-                "      <span class=\"v-line-height\" style=\"display:block;padding:16px 50px;line-height:120%;\"><strong><span style=\"font-size: 14px; line-height: 16.8px;\">Click to verify</span></strong></span>\n" +
+                "      <span class=\"v-line-height\" style=\"display:block;padding:16px 50px;line-height:120%;\"><strong><span style=\"font-size: 14px; line-height: 16.8px;\">Verify your email address</span></strong></span>\n" +
                 "    </a>\n" +
                 "    <!--[if mso]></center></v:roundrect><![endif]-->\n" +
                 "</div>\n" +
@@ -302,7 +302,7 @@ public class SignupEmailTemplate {
                 "      <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Montserrat',sans-serif;\" align=\"left\">\n" +
                 "        \n" +
                 "  <div class=\"v-line-height v-font-size\" style=\"font-size: 14px; color: #e9e9e9; line-height: 190%; text-align: center; word-wrap: break-word;\">\n" +
-                "    <p style=\"font-size: 14px; line-height: 190%;\"><span style=\"font-size: 12px; line-height: 22.8px;\">© 2023 MindConnect. All Rights Reserved.</span></p>\n" +
+                "    <p style=\"font-size: 14px; line-height: 190%;\"><span style=\"font-size: 12px; line-height: 22.8px;\">© 2023 MonieFlex. All Rights Reserved.</span></p>\n" +
                 "  </div>\n" +
                 "\n" +
                 "      </td>\n" +
