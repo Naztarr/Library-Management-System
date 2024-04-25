@@ -3,11 +3,13 @@ package com.naz.libManager.service.serviceImplementation;
 import com.naz.libManager.dto.LoginDto;
 import com.naz.libManager.dto.SignupDto;
 import com.naz.libManager.entity.User;
+import com.naz.libManager.enums.VerifyType;
 import com.naz.libManager.exception.LibManagerException;
 import com.naz.libManager.payload.ApiResponse;
 import com.naz.libManager.payload.LoginResponse;
 import com.naz.libManager.repository.UserRepository;
 import com.naz.libManager.service.AuthenticationService;
+import com.naz.libManager.util.ForgotPasswordTemplate;
 import com.naz.libManager.util.SignupEmailTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -132,4 +134,69 @@ public class AuthImplementation implements AuthenticationService {
         }
     }
 
+    /**
+     * @param email The email address of the user
+     * @param type Enum indicating the type of verification; whether signup or password reset
+     * @return ResponseEntity containing ApiResponse indicating success or error accordingly
+     */
+    @Override
+    public ResponseEntity<ApiResponse<String>> sendLink(String email, VerifyType type) {
+        User user = userRepository.findByEmailAddress(email).orElseThrow(()
+                -> new LibManagerException("User not found"));
+        if(type == VerifyType.SIGNUP){
+            if(user.isEnabled()){
+                throw new LibManagerException("Email address is already verified");
+            } else{
+                emailImplementation.sendMail(
+                        SignupEmailTemplate.signup(user.getFirstName(), generateToken(user, expire)),
+                        "Verify your email address",
+                        email);
+                return ResponseEntity.ok(new ApiResponse<>("Check your email for verification link", HttpStatus.OK));
+            }
+        } else if(type == VerifyType.PASSWORD_RESET){
+            emailImplementation.sendMail(
+                    ForgotPasswordTemplate.resetPassword(user.getFirstName(), generateToken(user, expire)),
+                    "Password reset",
+                    email
+            );
+            user.setPasswordRecovery(true);
+            userRepository.save(user);
+            return ResponseEntity.ok(new ApiResponse<>("Check your email for password reset link", HttpStatus.OK));
+        } else{
+            throw new LibManagerException("Invalid verification type");
+        }
+    }
+
+    /**
+     * @param token Token from which the email address will be extracted
+     * @param password new password of the user
+     * @param confirmPassword new password confirmation
+     * @return ResponseEntity containing ApiResponse indicating status of the operation whether successful or not
+     */
+    @Override
+    public ResponseEntity<ApiResponse<String>> resetPassword(String token, String password, String confirmPassword) {
+        String email = jwtImplementation.extractEmailAddressFromToken(token);
+        if(email != null){
+            if(jwtImplementation.isExpired(token)){
+                throw new LibManagerException("Link has expired. Please request for a new link");
+            } else{
+                User user = userRepository.findByEmailAddress(email).orElseThrow(()
+                        -> new LibManagerException("User not found"));
+                if(!user.getPasswordRecovery()){
+                    throw new LibManagerException("Password reset was not initiated");
+                } else{
+                    if(password.equals(confirmPassword)){
+                        user.setPassword(passwordEncoder.encode(password));
+                        user.setPasswordRecovery(false);
+                        userRepository.save(user);
+                        return ResponseEntity.ok(new ApiResponse<>("Password reset successfully", HttpStatus.OK));
+                    } else{
+                        throw new LibManagerException("Passwords do not match");
+                    }
+                }
+            }
+        } else{
+            throw new LibManagerException("Link not properly formatted");
+        }
+    }
 }

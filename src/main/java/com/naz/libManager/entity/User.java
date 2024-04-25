@@ -17,24 +17,32 @@ import java.util.List;
 @Setter
 public class User extends BaseEntity implements UserDetails {
 
+    @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String emailAddress;
 
+    @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "password")
     private String password;
 
     @OneToMany(mappedBy = "borrower", cascade = CascadeType.ALL)
     private List<Book> borrowedBooks = new ArrayList<>();
 
+    @Column(name = "role")
     private Role role;
 
     @Column(name = "is_enabled")
     private Boolean isEnabled = false;
+
+    @Column(name = "password_recovery")
+    private Boolean passwordRecovery = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
